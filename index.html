@@ -608,15 +608,19 @@ tw-link:hover {
     line-height: 2;
 
     animation: fadeIn 2s ease;
-}</style><script role="script" id="twine-user-script" type="text/twine-javascript">window.musicStarted = false;
+}</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* =========================
+   VARIABLES
+========================= */
+
+window.musicStarted = false;
 
 window.bgMusic = null;
 
 /* =========================
-   MÚSICA INICIAL
+   MÚSICA GENERAL
 ========================= */
 
-window.startMusic = function(){
+window.playSystemMusic = function(){
 
     if(window.musicStarted) return;
 
@@ -626,18 +630,21 @@ window.startMusic = function(){
 
     music.loop = true;
 
-    music.volume = 0.35;
+    music.volume = 0.4;
 
-    music.play();
+    music.play().catch(function(e){
+
+        console.log("Autoplay bloqueado");
+    });
 
     window.bgMusic = music;
-}
+};
 
 /* =========================
-   CAMBIO EMOCIONAL
+   MÚSICA EMOCIONAL
 ========================= */
 
-window.changeEmotionalMusic = function(){
+window.playEmotionalMusic = function(){
 
     if(window.bgMusic){
 
@@ -648,12 +655,15 @@ window.changeEmotionalMusic = function(){
 
     emotional.loop = true;
 
-    emotional.volume = 0.4;
+    emotional.volume = 0.45;
 
-    emotional.play();
+    emotional.play().catch(function(e){
+
+        console.log("Autoplay bloqueado");
+    });
 
     window.bgMusic = emotional;
-}
+};
 
 /* =========================
    MODOS VISUALES
@@ -665,15 +675,13 @@ window.setMode = function(mode){
         "data-mode",
         mode
     );
-}
+};
 
 /* =========================
-   SCROLL + AUDIO
+   SCROLL ARRIBA
 ========================= */
 
 window.addEventListener("click", function(){
-
-    startMusic();
 
     setTimeout(function(){
 
@@ -687,11 +695,7 @@ window.addEventListener("click", function(){
 
     }, 50);
 
-});</script><tw-passagedata pid="1" name="START" tags="" position="675,275" size="100,100">&lt;script&gt;
-
-setMode(&quot;boot-mode&quot;);
-
-&lt;/script&gt;
+});</script><tw-passagedata pid="1" name="START" tags="" position="675,275" size="100,100">
 
 |intro&gt;[
 
@@ -767,7 +771,9 @@ ESTABLECIENDO CONEXIÓN...
     &lt;/div&gt;
 
     ]
-]</tw-passagedata><tw-passagedata pid="2" name="ACCEDER AL SISTEMA" tags="" position="675,400" size="100,100">&lt;script&gt;
+]</tw-passagedata><tw-passagedata pid="2" name="ACCEDER AL SISTEMA" tags="" position="675,400" size="100,100">(run: playSystemMusic())
+
+&lt;script&gt;
 
 setMode(&quot;memory-mode&quot;);
 
@@ -1395,9 +1401,8 @@ MENSAJE OCULTO DE OPERADOR “MORENA”
 &lt;hr&gt;
 
 [[ABRIR MENSAJE]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="19" name="ABRIR MENSAJE" tags="" position="925,1775" size="100,100">&lt;script&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="19" name="ABRIR MENSAJE" tags="" position="925,1775" size="100,100">(run: playEmotionalMusic())
 
-changeEmotionalMusic();
 
 &lt;/script&gt;
 
