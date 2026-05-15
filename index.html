@@ -656,7 +656,19 @@ window.changeEmotionalMusic = function(){
 }
 
 /* =========================
-   SCROLL
+   MODOS VISUALES
+========================= */
+
+window.setMode = function(mode){
+
+    document.documentElement.setAttribute(
+        "data-mode",
+        mode
+    );
+}
+
+/* =========================
+   SCROLL + AUDIO
 ========================= */
 
 window.addEventListener("click", function(){
