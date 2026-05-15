@@ -608,86 +608,51 @@ tw-link:hover {
     line-height: 2;
 
     animation: fadeIn 2s ease;
-}</style><script role="script" id="twine-user-script" type="text/twine-javascript">window.music = new Audio();
+}</style><script role="script" id="twine-user-script" type="text/twine-javascript">window.musicStarted = false;
 
-window.audioUnlocked = false;
+window.bgMusic = null;
 
 /* =========================
-   DESBLOQUEAR AUDIO
+   MÚSICA INICIAL
 ========================= */
 
-window.unlockAudio = async function(){
+window.startMusic = function(){
 
-    if(window.audioUnlocked) return;
+    if(window.musicStarted) return;
 
-    try {
+    window.musicStarted = true;
 
-        const silent = new Audio();
+    const music = new Audio("audio/main.mp3");
 
-        silent.play().catch(()=>{});
+    music.loop = true;
 
-        window.audioUnlocked = true;
+    music.volume = 0.35;
 
-    } catch(e){}
+    music.play();
+
+    window.bgMusic = music;
 }
 
 /* =========================
-   CROSSFADE
+   CAMBIO EMOCIONAL
 ========================= */
 
-window.changeMusic = function(src){
+window.changeEmotionalMusic = function(){
 
-    if(!window.audioUnlocked) return;
+    if(window.bgMusic){
 
-    const newMusic = new Audio(src);
+        window.bgMusic.pause();
+    }
 
-    newMusic.loop = true;
+    const emotional = new Audio("audio/emotional.mp3");
 
-    newMusic.volume = 0;
+    emotional.loop = true;
 
-    newMusic.play();
+    emotional.volume = 0.4;
 
-    const fadeOut = setInterval(function(){
+    emotional.play();
 
-        if(window.music.volume > 0.02){
-
-            window.music.volume -= 0.02;
-
-        } else {
-
-            clearInterval(fadeOut);
-
-            window.music.pause();
-        }
-
-    }, 80);
-
-    const fadeIn = setInterval(function(){
-
-        if(newMusic.volume < 0.35){
-
-            newMusic.volume += 0.02;
-
-        } else {
-
-            clearInterval(fadeIn);
-        }
-
-    }, 80);
-
-    window.music = newMusic;
-}
-
-/* =========================
-   MODOS
-========================= */
-
-window.setMode = function(mode){
-
-    document.documentElement.setAttribute(
-        "data-mode",
-        mode
-    );
+    window.bgMusic = emotional;
 }
 
 /* =========================
@@ -696,7 +661,7 @@ window.setMode = function(mode){
 
 window.addEventListener("click", function(){
 
-    unlockAudio();
+    startMusic();
 
     setTimeout(function(){
 
@@ -710,8 +675,7 @@ window.addEventListener("click", function(){
 
     }, 50);
 
-});
-</script><tw-passagedata pid="1" name="START" tags="" position="675,275" size="100,100">&lt;script&gt;
+});</script><tw-passagedata pid="1" name="START" tags="" position="675,275" size="100,100">&lt;script&gt;
 
 setMode(&quot;boot-mode&quot;);
 
@@ -795,8 +759,6 @@ ESTABLECIENDO CONEXIÓN...
 
 setMode(&quot;memory-mode&quot;);
 
-changeMusic(&quot;audio/memory.mp3&quot;);
-
 &lt;/script&gt;
 
 &lt;h1&gt;MEMORY CORE&lt;/h1&gt;
@@ -837,8 +799,6 @@ REGISTRO INICIAL:
 
 setMode(&quot;memory-mode&quot;);
 
-changeMusic(&quot;audio/memory.mp3&quot;);
-
 &lt;/script&gt;
 
 &lt;script&gt;
@@ -875,8 +835,6 @@ El sistema registra mención honorífica a colega “ANITA”.
 [[ACCEDER A ARCHIVOS CLASIFICADOS]]</tw-passagedata><tw-passagedata pid="4" name="ACCEDER A ARCHIVOS CLASIFICADOS" tags="" position="675,650" size="100,100">&lt;script&gt;
 
 setMode(&quot;memory-mode&quot;);
-
-changeMusic(&quot;audio/locos.mp3&quot;);
 
 &lt;/script&gt;
 
@@ -1010,8 +968,6 @@ desde esa primera vez, siempre ha sido así.
 
 setMode(&quot;memory-mode&quot;);
 
-changeMusic(&quot;audio/memory.mp3&quot;);
-
 &lt;/script&gt;
 
 &lt;script&gt;
@@ -1142,8 +1098,6 @@ El sistema registra que la unidad K9 no mostró remordimiento alguno.
 
 setMode(&quot;survival-mode&quot;);
 
-changeMusic(&quot;audio/survival.mp3&quot;);
-
 &lt;/script&gt;
 
 &lt;script&gt;
@@ -1185,8 +1139,6 @@ LAS OPERADORAS SE MANTUVIERON JUNTAS.
 [[ACCEDER A MEMORIAS CRÍTICAS]]</tw-passagedata><tw-passagedata pid="13" name="ACCEDER A MEMORIAS CRÍTICAS" tags="" position="925,1025" size="100,100">&lt;script&gt;
 
 setMode(&quot;survival-mode&quot;);
-
-changeMusic(&quot;audio/survival.mp3&quot;);
 
 &lt;/script&gt;
 
@@ -1256,8 +1208,6 @@ Compatibilidad futura estimada:
 [[INICIAR PROYECCIÓN FINAL]]</tw-passagedata><tw-passagedata pid="15" name="INICIAR PROYECCIÓN FINAL" tags="" position="925,1275" size="100,100">&lt;script&gt;
 
 setMode(&quot;final-mode&quot;);
-
-changeMusic(&quot;audio/final.mp3&quot;);
 
 &lt;/script&gt;
 
@@ -1345,8 +1295,6 @@ incluso en los más difíciles.
 
 setMode(&quot;final-mode&quot;);
 
-changeMusic(&quot;audio/final.mp3&quot;);
-
 &lt;/script&gt;
 
 &lt;script&gt;
@@ -1407,8 +1355,6 @@ Cerrando sistema...
 
 setMode(&quot;final-mode&quot;);
 
-changeMusic(&quot;audio/final.mp3&quot;);
-
 &lt;/script&gt;
 
 &lt;script&gt;
@@ -1437,10 +1383,15 @@ MENSAJE OCULTO DE OPERADOR “MORENA”
 &lt;hr&gt;
 
 [[ABRIR MENSAJE]]
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="19" name="ABRIR MENSAJE" tags="" position="925,1775" size="100,100">
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="19" name="ABRIR MENSAJE" tags="" position="925,1775" size="100,100">&lt;script&gt;
+
+changeEmotionalMusic();
+
+&lt;/script&gt;
+
 Mi Antonietta:
-(align:&quot;&lt;==&gt;&quot;)+(box:&quot;=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX====&quot;)[
-Hoy cumplimos 4 años juntas amor… y aunque me encantaría tenerte aquí a mi lado abrazándote y celebrando como siempre, también hay una parte de mí que está tranquila y feliz, porque sé que estás en otro lado creciendo, trabajando por tus sueños y convirtiéndote en la mujer increíble que siempre supe que eras.
+
+(align:&quot;&lt;==&gt;&quot;)+(box:&quot;X&quot;)[Hoy cumplimos 4 años juntas amor… y aunque me encantaría tenerte aquí a mi lado abrazándote y celebrando como siempre, también hay una parte de mí que está tranquila y feliz, porque sé que estás en otro lado creciendo, trabajando por tus sueños y convirtiéndote en la mujer increíble que siempre supe que eras.
 
 Te extraño muchísimo. Extraño tu presencia, tus abrazos, nuestras conversaciones, hasta las cosas más pequeñas para compartir contigo. Pero incluso en la distancia, sigues haciéndome sentir acompañada todos los días (gracias por Panchito y tus fotitos).
 
@@ -1461,13 +1412,10 @@ Ah… y Mango también te extraña muchísimo, dice que ya van casi 40 días de 
 
 
 
-
 [[TE AMO]]
 &lt;/div&gt;</tw-passagedata><tw-passagedata pid="20" name="TE AMO" tags="" position="925,1900" size="100,100">&lt;script&gt;
 
 setMode(&quot;final-mode&quot;);
-
-changeMusic(&quot;audio/final.mp3&quot;);
 
 &lt;/script&gt;
 
